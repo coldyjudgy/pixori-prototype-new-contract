@@ -66,7 +66,7 @@ async function handleTransaction(description: string, args: any) {
   }
 }
 
-export function MintCluster({name, array}){
+export function MintCluster({name, array, address}){
 async function mint() {
   console.log('Ping...');
   await fcl.send([fcl.ping()]);
@@ -108,8 +108,10 @@ async function mint() {
       [
         {key: "name", value: name},
         {key: "color", value: array},
+        {key: "address", value: address},
       ],  
       t.Dictionary([
+        {key: t.String, value: t.String},
         {key: t.String, value: t.String},
         {key: t.String, value: t.String},
       ])

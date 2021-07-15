@@ -27,13 +27,16 @@ import { Fragment } from 'react';
 import { exportComponentAsPNG } from "react-component-export-image"
 import ColorPicker from '../Components/ColorPicker.js';
 import {MintCluster} from '../clusters/mint-cluster'
+import {useCurrentUser} from "../hooks/current-user"
 import playbutton from "../img/btn_play_circle_purple.png"
 import stopbutton from "../img/btn_stop_circle_purple.png"
+
+
 const arr1= Array.from(Array(16), () => new Array(32).fill(0));
 
 const Home = () => {
 
-
+  const cu = useCurrentUser();
 
 
 
@@ -388,7 +391,7 @@ const Home = () => {
     </div>
 
     <div>
-    <MintCluster name={nftName} array={colorArray} />
+    <MintCluster name={nftName} array={colorArray} address={cu.addr}/>
     </div>
 
     </div>
