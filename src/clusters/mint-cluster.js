@@ -6,13 +6,13 @@ import * as Elliptic from 'elliptic';
 
 const ec = new Elliptic.ec('p256');
 
-function hashMsgHex(msgHex: string) {
+function hashMsgHex(msgHex) {
   const sha = new SHA3(256);
   sha.update(Buffer.from(msgHex, 'hex'));
   return sha.digest();
 }
 
-function signWithKey(privateKey: string, data: string) {
+function signWithKey(privateKey, data) {
   const key = ec.keyFromPrivate(Buffer.from(privateKey, 'hex'));
   const sig = key.sign(hashMsgHex(data));
   const n = 32; // half of signature length?
@@ -28,15 +28,15 @@ interface Account {
   keyId: number;
 }
 
-export const buildAuthorization = ({ address, keyId, privateKey }: Account) => (
-  account: any
+export const buildAuthorization = ({ address, keyId, privateKey }) => (
+  account
 ) => ({
   ...account,
   tempId: address,
   addr: address,
   keyId: keyId,
   resolve: null,
-  signingFunction: (data: any) => {
+  signingFunction: (data) => {
     return {
       addr: address,
       keyId: keyId,
@@ -46,11 +46,11 @@ export const buildAuthorization = ({ address, keyId, privateKey }: Account) => (
 });
 
 const admin: Account = {
-  address: '05f5f6e2056f588b',
+  address: 'db16a5e14c410280',
   publicKey:
-    '2f903857515eb6eb0bbfe6a8e587878e172c728c964914fde02eefe0d23dcf46d766bf9e1e55843c047b1baa132b8d652e77ed5ffae1b1e807c1c9d9ee15ed33',
+    '8f2674b2757a11915d44bcd481bf92f1662fb7828a82db5173a8964aa0579e1c382cfd6c1ac37236cb06ebc17343b72b42ccc6babc87c9676e05fe351a7e5c69',
   privateKey:
-    'cfa7ed37cd930acd4f64c843901f276bc66941952b75a7c0e1646a50ec486e22',
+    '5a92a4f5614f276b6f2ed4d81f01729a3b1d9b44afe71bf46bb10d058b249fb9',
   keyId: 0,
 };
 
@@ -74,26 +74,26 @@ async function mint() {
 
   await handleTransaction('Sending transaction...', [
       fcl.transaction`
-      import Pixori from 0x05f5f6e2056f588b 
+      import Toast from 0xdb16a5e14c410280
 
-      transaction(metadata: {String: String}) {
+      transaction(metadata: {String: String}, address: String) {
       
-          let receiverRef: &{Pixori.NFTReceiver}
-          let minterRef: &Pixori.NFTMinter
+          let receiverRef: &{Toast.NFTReceiver}
+          let minterRef: &Toast.NFTMinter
       
           prepare(acct: AuthAccount) {
       
-              self.receiverRef = acct.getCapability<&{Pixori.NFTReceiver}>(/public/NFTReceiver)
+              self.receiverRef = acct.getCapability<&{Toast.NFTReceiver}>(/public/Receiver)
                   .borrow()
                   ?? panic("Could not borrow receiver reference")
               
-              self.minterRef = acct.borrow<&Pixori.NFTMinter>(from: /storage/NFTMinter)
+              self.minterRef = acct.borrow<&Toast.NFTMinter>(from: /storage/Minter)
                   ?? panic("Could not borrow minter reference")
           }
       
           execute {
       
-              let newNFT <- self.minterRef.mintNFT()
+              let newNFT <- self.minterRef.mintNFT(initAddress: address)
               
               self.receiverRef.deposit(token: <-newNFT, metadata: metadata)
               log("NFT Minted and deposited to the Current user's Collection")
@@ -108,15 +108,14 @@ async function mint() {
       [
         {key: "name", value: name},
         {key: "color", value: array},
-        {key: "address", value: address},
       ],  
       t.Dictionary([
         {key: t.String, value: t.String},
         {key: t.String, value: t.String},
-        {key: t.String, value: t.String},
       ])
-      )]      
-    ),
+      ),
+      fcl.arg(address, t.String) 
+    ]),
     fcl.limit(100),
   ]);
 

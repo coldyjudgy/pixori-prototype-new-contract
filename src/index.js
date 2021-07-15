@@ -7,7 +7,7 @@ import "./config"
 import {AuthCluster} from './clusters/auth-cluster';
 import {RecoilRoot} from "recoil"
 import {CurrentUserSubscription} from "./hooks/current-user"
-
+import {SetupCluster} from "./clusters/setup-cluster"
 import {InitCluster} from "./clusters/init-cluster"
 import {ProfileCluster} from './clusters/profile-cluster'
 import {useCurrentUser} from "./hooks/current-user"
@@ -33,6 +33,7 @@ ReactDOM.render(
       <CurrentUserSubscription />
       <Init />
       <Profile />
+      <SetupCluster />
       <App />
     </RecoilRoot>
   </React.StrictMode>, document.getElementById('root'));

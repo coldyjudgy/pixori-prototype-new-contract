@@ -311,7 +311,7 @@ const Home = () => {
   
   const colorArray = arr1.toString();
 
-  const [nftName, setNftName] = useState("initial value")
+  const [nftName, setNftName] = useState("")
 
   function set() {
     setNftName(document.getElementById("input").value)
@@ -386,8 +386,7 @@ const Home = () => {
 
     Name of NFT:     
     <div>
-      <input type="text" id="input"></input>
-      <button onClick={set}>set Name</button>
+      <input type="text" id="input" onChange={set}></input>
     </div>
 
     <div>
