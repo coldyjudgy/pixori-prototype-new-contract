@@ -74,20 +74,20 @@ async function mint() {
 
   await handleTransaction('Sending transaction...', [
       fcl.transaction`
-      import Toast from 0xdb16a5e14c410280
+      import Monday from 0xdb16a5e14c410280
 
       transaction(metadata: {String: String}, address: String) {
       
-          let receiverRef: &{Toast.NFTReceiver}
-          let minterRef: &Toast.NFTMinter
+          let receiverRef: &{Monday.NFTReceiver}
+          let minterRef: &Monday.NFTMinter
       
           prepare(acct: AuthAccount) {
       
-              self.receiverRef = acct.getCapability<&{Toast.NFTReceiver}>(/public/Receiver)
+              self.receiverRef = acct.getCapability<&{Monday.NFTReceiver}>(/public/MondayReceiver)
                   .borrow()
                   ?? panic("Could not borrow receiver reference")
               
-              self.minterRef = acct.borrow<&Toast.NFTMinter>(from: /storage/Minter)
+              self.minterRef = acct.borrow<&Monday.NFTMinter>(from: /storage/MondayMinter)
                   ?? panic("Could not borrow minter reference")
           }
       

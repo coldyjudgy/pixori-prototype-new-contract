@@ -8,17 +8,15 @@ export function TokenCluster({addresss, address}) {
     const encoded = await fcl
       .send([
         fcl.script`
-        import Toast from 0xdb16a5e14c410280
+        import Monday from 0xdb16a5e14c410280
 
-        pub fun main(addresss: Address, address: String): {String: String} {
+        pub fun main(addresss: Address, address: String): [AnyStruct] {
           let nftOwner = getAccount(addresss)  
-          let capability = nftOwner.getCapability<&{Toast.NFTReceiver}>(/public/Receiver)
+          let capability = nftOwner.getCapability<&{Monday.NFTReceiver}>(/public/MondayReceiver)
           let receiverRef = capability.borrow()
               ?? panic("Could not borrow the receiver reference")
-
-          let allMetadata = receiverRef.getMetadata(address: address)
       
-          return allMetadata
+          return receiverRef.getMetadata(address: address)
         }
       `,
       fcl.args([fcl.arg(addresss, t.Address), fcl.arg(address, t.String)]),
@@ -35,10 +33,14 @@ export function TokenCluster({addresss, address}) {
       {
         nftInfo &&
         <div>
-          Name
-            {Object.keys(nftInfo.name)}
-          Color
-            {Object.keys(nftInfo.color)}
+            {Object.keys(nftInfo).map(k => {
+              return (
+                <p>
+                  NFT #{k} > Name: {nftInfo[k].name} / Color: {nftInfo[k].color}
+                </p>
+              )
+            })
+            }
         </div>
       }
     </div>
