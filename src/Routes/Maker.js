@@ -30,6 +30,8 @@ import {MintCluster} from '../clusters/mint-cluster'
 import {useCurrentUser} from "../hooks/current-user"
 import playbutton from "../img/btn_play_circle_purple.png"
 import stopbutton from "../img/btn_stop_circle_purple.png"
+import {ErrorTokenCluster} from '../clusters/error-token-cluster'
+
 
 
 const arr1= Array.from(Array(16), () => new Array(32).fill(0));
@@ -323,6 +325,7 @@ const Home = () => {
   const playHeadComponent = playHead();
 
   //App returns the composite of our beat machine and components
+  if (cu.addr){
   return (
     <Fragment>
 
@@ -395,7 +398,12 @@ const Home = () => {
 
     </div>
     </Fragment>
-  );
+  )}
+  else {
+    return (
+      <ErrorTokenCluster />
+    )
+  }
 
 
   
